@@ -126,7 +126,29 @@ public OnPlayerDeath(playerid, killerid, reason)
     // if they ever return to class selection make them city
 	// select again first
 	gPlayerHasCitySelected[playerid] = 0;
-    
+	
+	// transfiere la luca
+	if(killerid != INVALID_PLAYER_ID) {
+		new playercash;
+		playercash = GetPlayerMoney(playerid);
+		if(playercash >= 1000)  {			
+			GivePlayerMoney(playerid, -1000);
+		}
+		GivePlayerMoney(killerid, 1000);
+	}
+		
+	//mensaje de muerte
+	
+	new asesino[MAX_PLAYER_NAME];
+	new victima[MAX_PLAYER_NAME];
+	new string[80];
+	
+	GetPlayerName(playerid,asesino, sizeof asesino);
+	GetPlayerName(playerid,victima, sizeof victima);
+	
+	format(string,128,"%s ha asesinado a %s.",asesino,victima);
+	SendClientMessageToAll(COLOR_INFO, string);
+	
 	return 1;
 }
 
@@ -587,6 +609,14 @@ CMD:autito(playerid, params[]){
 	return SpawnVehiculo(playerid, 496);
 }
 
+CMD:bici(playerid, params[]){
+	return SpawnVehiculo(playerid, 481);
+}
+
+CMD:bote(playerid, params[]){
+	return SpawnVehiculo(playerid, 473);
+}
+
 // ACCESORIOS
 
 CMD:offroad(playerid, params[]){
@@ -746,11 +776,11 @@ CMD:gotoplayer(playerid, params[])
 	new userX;
 	new Float:x, Float:y, Float:z;
     if (sscanf(params, "u", userX))
-    {
-		GetPlayerPos(userX,x,y,z);
+    {		
         return SendClientMessage(playerid, COLOR_ERROR, "Usage: \"/tp <user> \"");
     }
 	else{
+		GetPlayerPos(userX,x,y,z);
 	    return tpxyz(playerid,x,y,z);
 	}
 }

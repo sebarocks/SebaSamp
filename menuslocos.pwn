@@ -142,7 +142,6 @@ public OnPlayerSelectedMenuRow(playerid, row)
 				TogglePlayerControllable(playerid, true);
             }
         }
-		TogglePlayerControllable(playerid, true);
     }
 	 
 	if(GetPlayerMenu(playerid) == tps)
@@ -182,6 +181,12 @@ public OnPlayerSelectedMenuRow(playerid, row)
 		}
 	 }
      return 1;
+}
+
+public OnPlayerExitedMenu(playerid)
+{
+    TogglePlayerControllable(playerid, true);
+    return 1;
 }
 
 stock hacertp(playerid, Float:x, Float:y, Float:z)

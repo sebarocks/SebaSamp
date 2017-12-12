@@ -128,15 +128,24 @@ CMD:registrar(playerid, params[])
     }
 }
 
+// da plata extra por racha
 public OnPlayerDeath(playerid, killerid, reason)
 {
+	new racha=0;
 	if(killerid != INVALID_PLAYER_ID) {
-		playercash = GetPlayerMoney(playerid);
-		if(playercash >= 1000)  {			
-			GivePlayerMoney(playerid, -1000);
-		}
-		//new racha = getRacha()
-		GivePlayerMoney(killerid, 1000);
+		racha += getRacha(playerid);
+		GivePlayerMoney(killerid, 1000*racha);
 	}
    	return 1;
+}
+
+stock getRacha(playerid)
+{
+	new playername[MAX_PLAYER_NAME];
+	GetPlayerName(playerid,playername, sizeof playername);
+	
+	// select racha from kills where nombre=playername
+	
+	// si no esta user devuelve 1
+	return 1;
 }
