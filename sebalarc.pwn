@@ -127,28 +127,18 @@ public OnPlayerDeath(playerid, killerid, reason)
 	// select again first
 	gPlayerHasCitySelected[playerid] = 0;
 	
-	// transfiere la luca
 	if(killerid != INVALID_PLAYER_ID) {
+		
+		//transfiere la luca
 		new playercash;
 		playercash = GetPlayerMoney(playerid);
 		if(playercash >= 1000)  {			
 			GivePlayerMoney(playerid, -1000);
 		}
 		GivePlayerMoney(killerid, 1000);
-	}
 		
-	//mensaje de muerte
-	
-	new asesino[MAX_PLAYER_NAME];
-	new victima[MAX_PLAYER_NAME];
-	new string[80];
-	
-	GetPlayerName(playerid,asesino, sizeof asesino);
-	GetPlayerName(playerid,victima, sizeof victima);
-	
-	format(string,128,"%s ha asesinado a %s.",asesino,victima);
-	SendClientMessageToAll(COLOR_INFO, string);
-	
+		MensajeKill(playerid, killerid);
+	}	
 	return 1;
 }
 
@@ -556,6 +546,20 @@ stock tpxyz(playerid, Float:x, Float:y, Float:z)
 	}
 }
 
+stock MensajeKill(playerid, killerid)
+{
+	//mensaje de muerte
+	new asesino[MAX_PLAYER_NAME];
+	new victima[MAX_PLAYER_NAME];
+	new string[80];
+
+	GetPlayerName(killerid,asesino, sizeof asesino);
+	GetPlayerName(playerid,victima, sizeof victima);
+	
+	format(string,128,"%s ha asesinado a %s.",asesino,victima);
+	SendClientMessageToAll(COLOR_INFO, string);
+}
+
 // BASICO
 
 CMD:heal(playerid, params[]){
@@ -581,7 +585,27 @@ CMD:fix(playerid, params[])
 	}
 }
 
+CMD:flip(playerid, params[])
+{
+	new currentveh;
+	new Float:angle;
+	currentveh = GetPlayerVehicleID(playerid);
+	GetVehicleZAngle(currentveh, angle);
+	SetVehicleZAngle(currentveh, angle);
+	SendClientMessage(playerid, 0xFFFFFFFF, "Your vehicle has been flipped.");
+	return 1;
+}
+
+
 // AUTOS
+
+CMD:autos(playerid, params[])
+{
+	new string[30];
+	strcat(string,"/help\n/cmds\n/teles\netc");
+	ShowPlayerDialog(playerid,1,DIALOG_STYLE_LIST,"Choose one of the following",string,"Select","Cancel");
+	return 1;
+}
 
 CMD:vh(playerid, params[])
 {
@@ -615,6 +639,22 @@ CMD:bici(playerid, params[]){
 
 CMD:bote(playerid, params[]){
 	return SpawnVehiculo(playerid, 473);
+}
+
+CMD:humvee(playerid, params[]){
+	return SpawnVehiculo(playerid, 470);
+}
+
+CMD:quad(playerid, params[]){
+	return SpawnVehiculo(playerid, 471);
+}
+
+CMD:heli(playerid, params[]){
+	return SpawnVehiculo(playerid, 469);
+}
+
+CMD:avion(playerid, params[]){
+	return SpawnVehiculo(playerid, 476);
 }
 
 // ACCESORIOS
@@ -655,7 +695,6 @@ CMD:vcolor(playerid, params[]){
 
 // ARMAS
 
-
 CMD:weaponx(playerid, params[])
 {
 	new arma,cant;
@@ -691,6 +730,12 @@ CMD:cuchillo(playerid, params[]){
     return 1;
 }
 
+CMD:kungfu(playerid, params[])
+{	
+    SetPlayerFightingStyle (playerid, FIGHT_STYLE_KUNGFU);
+    SendClientMessage(playerid, COLOR_SUCCESS, "Ahora ya sabes kung fu");
+}
+
 // ACCIONES
 
 CMD:accion(playerid, params[])
@@ -722,9 +767,10 @@ CMD:jason(playerid, params[])
 
 stock showComandos(playerid)
 {
-	SendClientMessage(playerid, COLOR_SUCCESS, "Comandos:");
-	SendClientMessage(playerid, COLOR_INFO , "/lambo /autito /arsenal /fix /moto /motox /jason /offroad");
-	SendClientMessage(playerid, COLOR_INFO , "/jetpack /suspension /nitro /rims /katana /chela /rims /tps");
+	SendClientMessage(playerid, COLOR_SUCCESS, "Comandos: /comandos");
+	SendClientMessage(playerid, COLOR_INFO , "/autito /moto /listautos /vcolor /suspension /nitro /rims /flip /fix ");
+	SendClientMessage(playerid, COLOR_INFO , "/tps /jetpack /paracaidas /listatps /chela /kungfu /skin ");
+	SendClientMessage(playerid, COLOR_INFO , "/armas /cuchillo /pala /bate /jason /katana /offroad /pos ");
 	return 1;
 }
 
@@ -738,6 +784,14 @@ CMD:listatps(playerid,params[])
 	SendClientMessage(playerid, COLOR_SUCCESS, "Tps:");
 	SendClientMessage(playerid, COLOR_INFO , "/casacj /ls /sf /lv ");
 	SendClientMessage(playerid, COLOR_INFO , "/area51 /playa /torre ");
+	return 1;
+}
+
+CMD:listautos(playerid,params[])
+{
+	SendClientMessage(playerid, COLOR_SUCCESS, "Autos:");
+	SendClientMessage(playerid, COLOR_INFO , "/autito /moto /lambo /bici /quad /heli");
+	SendClientMessage(playerid, COLOR_INFO , "/bote /motox /bote /humvee /monster /avion");
 	return 1;
 }
 
